@@ -60,18 +60,11 @@
                                                     <button type="submit" class="btn red btn-sm text-light">Delete</button>
                                                 </form>
                                             </c:when>
+                                            <c:when test="${event.usersJoined.contains(user)}">
+                                                <a class="btn bg-warning btn-sm" href="/events/${event.id}/leave">Cancel</a>
+                                            </c:when>
                                             <c:otherwise>
-                                                <c:forEach items="${event.usersJoined}" var="attendee">
-                                                    <c:if test="${attendee.id == user.id}">
-                                                        <a class="btn bg-warning btn-sm" href="/events/${event.id}/leave">Cancel</a>
-                                                    </c:if>
-                                                    <c:if test="${attendee.id != user.id}">
-                                                        <a class="btn bg-warning btn-sm" href="/events/${event.id}/join">Join</a>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <c:if test="${event.usersJoined.size() == 0}">
-                                                    <a class="btn bg-warning btn-sm" href="/events/${event.id}/join">Join</a>
-                                                </c:if>
+                                                <a class="btn bg-warning btn-sm" href="/events/${event.id}/join">Join</a>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -106,17 +99,21 @@
                                     <td>${event.state}</td>
                                     <td>${event.host.firstName}</td>
                                     <td>
-                                        <c:forEach items="${event.usersJoined}" var="attendee">
-                                            <c:if test="${attendee.id == user.id}">
+                                        <c:choose>
+                                            <c:when test="${event.host == user}">
+                                                <a class="btn teal btn-sm text-light" href="/events/${event.id}/edit">Edit</a>
+                                                <form class="d-inline" action="/events/${event.id}/delete" method="post">
+                                                    <input type="hidden" name="_method" value="delete">
+                                                    <button type="submit" class="btn red btn-sm text-light">Delete</button>
+                                                </form>
+                                            </c:when>
+                                            <c:when test="${event.usersJoined.contains(user)}">
                                                 <a class="btn bg-warning btn-sm" href="/events/${event.id}/leave">Cancel</a>
-                                            </c:if>
-                                            <c:if test="${attendee.id != user.id}">
+                                            </c:when>
+                                            <c:otherwise>
                                                 <a class="btn bg-warning btn-sm" href="/events/${event.id}/join">Join</a>
-                                            </c:if>
-                                        </c:forEach>
-                                        <c:if test="${event.usersJoined.size() == 0}">
-                                            <a class="btn bg-warning btn-sm" href="/events/${event.id}/join">Join</a>
-                                        </c:if>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:when>
